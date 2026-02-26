@@ -1,16 +1,3 @@
--- TODO: 
--- Check Constraints [DONE]
--- on delete cascades 
--- Participation Constraints (do we need NOT NULLs? no right)
-
-CREATE TABLE MotionPicture 
-  (PRIMARY KEY INT id,
-    VARCHAR(50) NAME,
-    FLOAT rating CHECK (rating <= 10 AND rating >= 0), 
-    VARCHAR(50) production, 
-    INT budget CHECK (budget >= 0)
-  );
-
 INSERT INTO MotionPicture (id, NAME, rating, production, budget) VALUES
 (101, 'Breaking Bad', 9.1, 'High Bridge Productions', 195000000),
 (102, 'Band of Brothers', 9.5, 'DreamWorks', 125000000),
@@ -21,24 +8,11 @@ INSERT INTO MotionPicture (id, NAME, rating, production, budget) VALUES
 (203, 'Doctor Strange', 8, 'Marvel', 300000000),
 (204, 'Batman vs Superman', 3, 'Warner Bros', 300000000);
 
-CREATE TABLE Users 
-(PRIMARY KEY VARCHAR(50) email,
-  VARCHAR(50) name,
-  INT age
-);
-
 INSERT INTO Users (email, NAME, age) VALUES
 ('aneesha@fb.com', 'Aman Aneesh', 25),
 ('ssarkar@bu.edu', 'Simone Sarkar', 23),
 ('jamiel@gmail.com', 'Jamie Vardy', 29),
 ('wasaya@yahoo.com', 'Wasay Ahmeed', 41);
-
-CREATE TABLE Likes 
-(INT mpid, VARCHAR(50) uemail, 
-  PRIMARY KEY(mpid, uemail),
-  FOREIGN KEY(mpid) REFERENCES(MotionPicture), 
-  FOREIGN KEY(uemail) REFERENCES (Users)
-);
 
 INSERT INTO Likes (mpid, uemail) VALUES
 (101, 'aneesha@fb.com'),
@@ -48,36 +22,18 @@ INSERT INTO Likes (mpid, uemail) VALUES
 (101, 'ssarkar@bu.edu'),
 (101, 'jamiel@gmail.com');
 
-CREATE TABLE Movie (INT mpid,
-  FLOAT boxoffice_collection CHECK (boxoffice_collection >= 0),
-  PRIMARY KEY(mpid),
-  FOREIGN KEY(mpid) REFERENCES (MotionPicture)
-);
 INSERT INTO Movie (mpid, boxoffice_collection) VALUES
 (201, 500000000),
 (202, 60000000),
 (203, 300000000),
 (204, 200000000);
 
-CREATE TABLE Movie (
-  INT mpid, 
-  INT season_count CHECK (season_count >= 1),
-  PRIMARY KEY(mpid),
-  FOREIGN KEY(mpid) REFERENCES (MotionPicture)
-);
 INSERT INTO Series (mpid, season_count) VALUES
 (101, 5),
 (102, 1),
 (103, 8),
 (104, 5);
 
-CREATE TABLE People
-(PRIMARY KEY INT id,
-  VARCHAR(50) NAME,
-  VARCHAR(10) nationality,
-  VARCHAR(10) dob,
-  VARCHAR(1) gender,
-);
 INSERT INTO People (id, NAME, nationality, dob, gender) VALUES
 (1, 'Brian Cranston', 'USA', '1956-12-12', 'M'),
 (2, 'Aaron Paul', 'USA', '1982-01-12', 'M'),
@@ -104,17 +60,6 @@ INSERT INTO People (id, NAME, nationality, dob, gender) VALUES
 (33, 'Gal Gadot', 'USA', '1986-01-29', 'F'),
 (34, 'Deborah Snyder', 'UK', '1987-08-17', 'F');
 
-
-CREATE TABLE Role
-(
-  INT mpid,
-  INT pid,
-  VARCHAR(10) role_name,
-  PRIMARY KEY (mpid, pid, role_name),
-  FOREIGN KEY (mpid) REFERENCES (MotionPicture),
-  FOREIGN KEY (pid) REFERENCES People,
-);
-
 INSERT INTO Role (mpid, pid, role_name) VALUES
 (201, 5, 'Actor'),
 (201, 6, 'Actor'),
@@ -130,28 +75,9 @@ INSERT INTO Role (mpid, pid, role_name) VALUES
 (204, 32, 'Actor'),
 (204, 33, 'Actor');
 
-CREATE TABLE Award
-(
-  INT mpid,
-  INT pid,
-  VARCHAR(50) award_name,
-  INT award_year,
-  PRIMARY KEY (mpid, pid, award_name, award_year),
-  FOREIGN KEY (mpid) REFERENCES (MotionPicture),
-  FOREIGN KEY (pid) REFERENCES People
-);
-
 INSERT INTO Award (mpid, pid, award_name, award_year) VALUES
 (201, 5, 'Best Director', 2009),
 (201, 5, 'Best Actor', 2010);
-
-CREATE TABLE Genre
-(
-  INT mpid,
-  VARCHAR(50) genre_name,
-  PRIMARY KEY (mpid, genre_name),
-  FOREIGN KEY (mpid) REFERENCES (MotionPicture),
-);
 
 INSERT INTO Genre (mpid, genre_name) VALUES
 (101, 'Crime'),
@@ -182,15 +108,6 @@ INSERT INTO Genre (mpid, genre_name) VALUES
 (204, 'Sci-fi'),
 (204, 'Fantasy'),
 (204, 'Thriller');
-
-CREATE TABLE Location
-(
-  INT mpid,
-  INT zip,
-  VARCHAR(50) city,
-  PRIMARY KEY (mpid, zip),
-  FOREIGN KEY (mpid) REFERENCES (MotionPicture),
-);
 
 INSERT INTO Location (mpid, zip, city, country) VALUES
 (101, 02135, 'Boston', 'USA'),
