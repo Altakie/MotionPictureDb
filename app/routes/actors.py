@@ -12,7 +12,13 @@ def view_all_actors():
     #              The query should retrieve `name`, `nationality`, `dob`, and `gender`.
 
     query = """
-    SELECT * FROM ACTORS;
+    SELECT * 
+    FROM People p, 
+    (
+        SELECT * FROM Role 
+        WHERE role_name = "Actor"
+    ) AS a,
+    WHERE p.id = a.pid;
     """
 
     with Database() as db:
