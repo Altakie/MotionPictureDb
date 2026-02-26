@@ -1,0 +1,17 @@
+[project]
+name = "motionpicturedb"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "blinker==1.9.0",
+    "click==8.1.8",
+    "flask==3.1.0",
+    "itsdangerous==2.2.0",
+    "jinja2==3.1.5",
+    "markupsafe==3.0.2",
+    "pymysql==1.1.1",
+    "python-dotenv==1.0.1",
+    "werkzeug==3.1.3",
+]
