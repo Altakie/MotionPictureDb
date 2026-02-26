@@ -90,6 +90,7 @@ CREATE TABLE Location
   mpid INT,
   zip INT,
   city VARCHAR(50),
+  country VARCHAR(10),
   PRIMARY KEY (mpid, zip),
   FOREIGN KEY (mpid) REFERENCES MotionPicture(id) ON DELETE CASCADE
 );
