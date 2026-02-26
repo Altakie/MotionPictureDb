@@ -1,87 +1,95 @@
 -- TODO: 
 -- Check Constraints [DONE]
--- on delete cascades 
+-- on delete cascades [DONE]
 -- Participation Constraints (do we need NOT NULLs? no right)
 
 CREATE TABLE MotionPicture 
-  (PRIMARY KEY INT id,
-    VARCHAR(50) NAME,
-    FLOAT rating CHECK (rating <= 10 AND rating >= 0), 
-    VARCHAR(50) production, 
-    INT budget CHECK (budget >= 0)
-  );
+(
+  id INT PRIMARY KEY,
+  NAME VARCHAR(50),
+  rating FLOAT CHECK (rating <= 10 AND rating >= 0), 
+  production VARCHAR(50), 
+  budget INT CHECK (budget >= 0)
+);
 
 CREATE TABLE Users 
-(PRIMARY KEY VARCHAR(50) email,
-  VARCHAR(50) name,
-  INT age
+(
+  email VARCHAR(50) PRIMARY KEY,
+  name VARCHAR(50),
+  age INT
 );
 
 CREATE TABLE Likes 
-(INT mpid, VARCHAR(50) uemail, 
+(
+  mpid INT, 
+  uemail VARCHAR(50), 
   PRIMARY KEY(mpid, uemail),
-  FOREIGN KEY(mpid) REFERENCES(MotionPicture), 
-  FOREIGN KEY(uemail) REFERENCES (Users)
+  FOREIGN KEY(mpid) REFERENCES MotionPicture(id) ON DELETE CASCADE, 
+  FOREIGN KEY(uemail) REFERENCES Users(email) ON DELETE CASCADE
 );
 
-CREATE TABLE Movie (INT mpid,
-  FLOAT boxoffice_collection CHECK (boxoffice_collection >= 0),
+CREATE TABLE Movie 
+(
+  mpid INT,
+  boxoffice_collection FLOAT CHECK (boxoffice_collection >= 0),
   PRIMARY KEY(mpid),
-  FOREIGN KEY(mpid) REFERENCES (MotionPicture)
+  FOREIGN KEY(mpid) REFERENCES MotionPicture(id) ON DELETE CASCADE
 );
 
-CREATE TABLE Movie (
-  INT mpid, 
-  INT season_count CHECK (season_count >= 1),
+CREATE TABLE Series 
+(
+  mpid INT, 
+  season_count INT CHECK (season_count >= 1),
   PRIMARY KEY(mpid),
-  FOREIGN KEY(mpid) REFERENCES (MotionPicture)
+  FOREIGN KEY(mpid) REFERENCES MotionPicture(id) ON DELETE CASCADE
 );
 
 CREATE TABLE People
-(PRIMARY KEY INT id,
-  VARCHAR(50) NAME,
-  VARCHAR(10) nationality,
-  VARCHAR(10) dob,
-  VARCHAR(1) gender,
+(
+  id INT PRIMARY KEY,
+  NAME VARCHAR(50),
+  nationality VARCHAR(10),
+  dob VARCHAR(10),
+  gender VARCHAR(1)
 );
 
 
 CREATE TABLE Role
 (
-  INT mpid,
-  INT pid,
-  VARCHAR(10) role_name,
+  mpid INT,
+  pid INT,
+  role_name VARCHAR(10),
   PRIMARY KEY (mpid, pid, role_name),
-  FOREIGN KEY (mpid) REFERENCES (MotionPicture),
-  FOREIGN KEY (pid) REFERENCES People,
+  FOREIGN KEY (mpid) REFERENCES MotionPicture(id) ON DELETE CASCADE,
+  FOREIGN KEY (pid) REFERENCES People(id) ON DELETE CASCADE
 );
 
 
 CREATE TABLE Award
 (
-  INT mpid,
-  INT pid,
-  VARCHAR(50) award_name,
-  INT award_year,
+  mpid INT,
+  pid INT,
+  award_name VARCHAR(50),
+  award_year INT,
   PRIMARY KEY (mpid, pid, award_name, award_year),
-  FOREIGN KEY (mpid) REFERENCES (MotionPicture),
-  FOREIGN KEY (pid) REFERENCES People
+  FOREIGN KEY (mpid) REFERENCES MotionPicture(id) ON DELETE CASCADE,
+  FOREIGN KEY (pid) REFERENCES People(id) ON DELETE CASCADE
 );
 
 
 CREATE TABLE Genre
 (
-  INT mpid,
-  VARCHAR(50) genre_name,
+  mpid INT,
+  genre_name VARCHAR(50),
   PRIMARY KEY (mpid, genre_name),
-  FOREIGN KEY (mpid) REFERENCES (MotionPicture),
+  FOREIGN KEY (mpid) REFERENCES MotionPicture(id) ON DELETE CASCADE
 );
 
 CREATE TABLE Location
 (
-  INT mpid,
-  INT zip,
-  VARCHAR(50) city,
+  mpid INT,
+  zip INT,
+  city VARCHAR(50),
   PRIMARY KEY (mpid, zip),
-  FOREIGN KEY (mpid) REFERENCES (MotionPicture),
+  FOREIGN KEY (mpid) REFERENCES MotionPicture(id) ON DELETE CASCADE
 );
