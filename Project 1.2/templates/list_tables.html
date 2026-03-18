@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Database Tables</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="results-page">
+    <div class="container">
+        <!-- HEADER -->
+        <div class="results-header">
+            <h1>📚 Database Tables</h1>
+            <p class="subtitle">View all tables currently available in the database</p>
+        </div>
+
+        {% if tables %}
+            <div class="table-card">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Table Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for table in tables %}
+                            <tr>
+                                <td>{{ table[0] }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <div class="icon">📄</div>
+                <p>No tables found in the database.</p>
+            </div>
+        {% endif %}
+
+        <div class="results-footer">
+            <a href="/" class="back-link">← Back to Home</a>
+        </div>
+    </div>
+</body>
+</html>

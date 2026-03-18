@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>American Producers Search Results</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="results-page">
+    <div class="container">
+
+        <!-- HEADER -->
+        <div class="results-header">
+            <h1>🎬 American Producers Search</h1>
+            <p class="subtitle">
+                Producers with Box Office ≥ {{ request.form['box_office_min'] }} and Budget ≤ {{ request.form['budget_max'] }}
+            </p>
+        </div>
+
+        {% if results %}
+            <div class="table-card">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Producer Name</th>
+                            <th>Movie Name</th>
+                            <th>Box Office Collection</th>
+                            <th>Budget</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for result in results %}
+                            <tr>
+                                <td class="movie-title">{{ result[0] }}</td>
+                                <td>{{ result[1] }}</td>
+                                <td>{{ result[2] }}</td>
+                                <td>{{ result[3] }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <div class="icon">📈</div>
+                <p>No producers found with the specified criteria.</p>
+            </div>
+        {% endif %}
+
+        <div class="results-footer">
+            <a href="/" class="back-link">← Back to Home</a>
+        </div>
+
+    </div>
+</body>
+</html>
