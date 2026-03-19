@@ -6,7 +6,6 @@ queries_bp = Blueprint("query", __name__)
 
 @queries_bp.route("/list_tables")
 def list_tables():
-
     # >>>> TODO 1: Write a query to list all the tables in the database. <<<<
 
     query = """ show tables; """
@@ -118,10 +117,9 @@ def search_awards():
 
 @queries_bp.route("/find_youngest_oldest_actors", methods=["GET"])
 def find_youngest_oldest_actors():
-
     # >>>> TODO 7: Find the youngest and oldest actors who have won at least one award. <<<<
-    #              List the actor names and their age at the time they received the award. 
-    #              Age must be computed using the actor’s date of birth and the award-year only. 
+    #              List the actor names and their age at the time they received the award.
+    #              Age must be computed using the actor’s date of birth and the award-year only.
     #              In case of a tie, list all tied actors.
 
     query = """
@@ -203,9 +201,8 @@ def search_multiple_roles():
 
 @queries_bp.route("/top_thriller_movies_boston", methods=["GET"])
 def top_thriller_movies_boston():
-
     # >>>> TODO 10: Find the top 2 highest-rated thriller movies (genre: thriller) that were shot exclusively in Boston. <<<<
-    #               “Exclusively” means that the movie may not have any other shooting location. 
+    #               “Exclusively” means that the movie may not have any other shooting location.
     #               List the movie names and their rating.
 
     query = """ 
@@ -252,12 +249,15 @@ def search_movies_by_likes():
 
 @queries_bp.route("/actors_marvel_warner", methods=["GET"])
 def actors_marvel_warner():
-
     # >>>> TODO 12: Identify the actors who played a role in both “Marvel” and “Warner Bros” productions. <<<<
     #               List the actor names and the corresponding motion picture names.
 
     query = """ 
-    
+    SELECT a.name, m.name, wb.name
+    FROM (SELECT name, mpid FROM People, Role WHERE id = pid AND role_name = "Actor") as a,
+    (SELECT name, id FROM MotionPicture WHERE production = "Marvel") as m,
+    (SELECT name, id FROM MotionPicture WHERE production = "Warner Bros") as wb,
+    WHERE a.mpid IN m AND a.mpid IN wb;
     """
 
     with Database() as db:
@@ -267,7 +267,6 @@ def actors_marvel_warner():
 
 @queries_bp.route("/movies_higher_than_comedy_avg", methods=["GET"])
 def movies_higher_than_comedy_avg():
-
     # >>>> TODO 13: Find the motion pictures with a higher rating than the average rating of all comedy (genre) motion pictures.  <<<<
     #               List the names and ratings, sorted in descending order of ratings.
 
@@ -306,7 +305,6 @@ def movies_higher_than_comedy_avg():
 
 @queries_bp.route("/actors_with_common_birthday", methods=["GET"])
 def actors_with_common_birthday():
-
     # >>>> TODO 14: Find actors who share the same birthday. <<<<
     #               List the actor names (actor 1, actor 2) and their common birthday.
 
@@ -326,7 +324,6 @@ def actors_with_common_birthday():
 
 @queries_bp.route("/top_production_by_genre", methods=["GET"])
 def top_production_by_genre():
-
     # >>>> TODO 15: List the productions that have produced more than two movies in a given genre, where each movie has a rating higher than the average rating of that genre. <<<<
     #               List the `production company name`, `genre name` and the `count of movies` that meet the criteria, ordered by the count of movies in descending order.
 
@@ -356,12 +353,10 @@ def top_production_by_genre():
 
 @queries_bp.route("/versatile_talent", methods=["GET"])
 def versatile_talent():
-
     # >>>> TODO 16: Find individuals who have acted, directed, and produced motion pictures, and have won at least one award against one of those roles. <<<<
     #               List the person’s `name` and `nationality`.
 
     query = """ 
-    
     """
 
     with Database() as db:
@@ -375,7 +370,6 @@ def versatile_talent():
 
 @queries_bp.route("/high_roi_movies", methods=["GET"])
 def high_roi_movies():
-
     # >>>> TODO 17: Find the top 5 movies produced(shooted) in the USA with a “Return on Investment” (Box Office/Budget) higher than the average return on investment of all Marvel movies. <<<<
     #               Only include movies that have an ROI greater than the average ROI of all Marvel movies
     #               First column should be the movie name, second column should be country, and third column should be the ROI.
@@ -424,7 +418,6 @@ def high_roi_movies():
 
 @queries_bp.route("/awarded_series_growth", methods=["GET"])
 def awarded_series_growth():
-
     # >>>> TODO 18: Find all TV series that have more seasons than the average season count of all series, and have at least one award-winning person after the year 2010. <<<<
     #               List the TV series `name`, `season count` and the `number of awards won`, ordered by season count in descending order.
 
