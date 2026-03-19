@@ -253,21 +253,24 @@ def actors_marvel_warner():
     #               List the actor names and the corresponding motion picture names.
 
     query = """ 
-    
-    (SELECT DISTINCT mw.id, m.mp_name, w.mp_name
+    SELECT mw.pname, everything.name
     FROM
-        (SELECT p.id, p.name, mp.name AS mp_name
-        FROM People p
-        JOIN Role r ON p.id = r.pid
-        JOIN MotionPicture mp ON r.mpid = mp.id AND mp.production = 'Marvel'
-        WHERE r.role_name = 'Actor') AS m
-        JOIN
-        (SELECT p.id, p.name, mp.name AS mp_name
-        FROM People p
-        JOIN Role r ON p.id = r.pid
-        JOIN MotionPicture mp ON r.mpid = mp.id AND mp.production = 'Warner Bros'
-        WHERE r.role_name = 'Actor') AS w
-    ON m.id = w.id) AS mw;
+    (SELECT r.pid as pid, name FROM MotionPicture mp, Role r WHERE r.mpid = mp.id AND role_name = "Actor" AND (production = "Warner Bros" OR Production = "Marvel")) as everything,
+    (SELECT DISTINCT m.id, m.pname
+        FROM
+            (SELECT p.id, p.name as pname, mp.name AS mp_name
+            FROM People p
+            JOIN Role r ON p.id = r.pid
+            JOIN MotionPicture mp ON r.mpid = mp.id AND mp.production = 'Marvel'
+            WHERE r.role_name = 'Actor') AS m
+            JOIN
+            (SELECT p.id, p.name as pname, mp.name AS mp_name
+            FROM People p
+            JOIN Role r ON p.id = r.pid
+            JOIN MotionPicture mp ON r.mpid = mp.id AND mp.production = 'Warner Bros'
+            WHERE r.role_name = 'Actor') AS w
+        ON m.id = w.id) as mw
+    WHERE mw.id = everything.pid;
     """
 
     with Database() as db:
