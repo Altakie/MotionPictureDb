@@ -256,8 +256,8 @@ def actors_marvel_warner():
     SELECT a.name, m.name, wb.name
     FROM (SELECT name, mpid FROM People, Role WHERE id = pid AND role_name = "Actor") as a,
     (SELECT name, id FROM MotionPicture WHERE production = "Marvel") as m,
-    (SELECT name, id FROM MotionPicture WHERE production = "Warner Bros") as wb,
-    WHERE a.mpid IN m AND a.mpid IN wb;
+    (SELECT name, id FROM MotionPicture WHERE production = "Warner Bros") as wb
+    WHERE a.mpid = m.id AND a.mpid = wb.id;
     """
 
     with Database() as db:
@@ -357,6 +357,11 @@ def versatile_talent():
     #               List the person’s `name` and `nationality`.
 
     query = """ 
+    SELECT 
+    FROM 
+    (SELECT pid FROM Role WHERE role_name = "Actor"),
+    (SELECT pid FROM Role WHERE role_name = "Director"),
+    (SELECT pid FROM Role WHERE role_name = "Producer")
     """
 
     with Database() as db:
