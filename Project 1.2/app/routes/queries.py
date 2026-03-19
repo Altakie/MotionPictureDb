@@ -255,7 +255,7 @@ def actors_marvel_warner():
     query = """ 
     SELECT mw.pname, everything.name
     FROM
-    (SELECT r.pid as pid, name FROM MotionPicture mp, Role r WHERE r.mpid = mp.id AND role_name = "Actor" AND (production = "Warner Bros" OR Production = "Marvel")) as everything,
+    (SELECT r.pid as pid, name FROM MotionPicture mp, Role r WHERE r.mpid = mp.id AND role_name = "Actor" AND (production = "Warner Bros" OR production = "Marvel")) as everything,
     (SELECT DISTINCT m.id, m.pname
         FROM
             (SELECT p.id, p.name as pname, mp.name AS mp_name
@@ -374,9 +374,9 @@ def versatile_talent():
     FROM People p,
     (SELECT pid FROM Role WHERE role_name = "Actor") as a,
     (SELECT pid FROM Role WHERE role_name = "Director") as d,
-    (SELECT pid FROM Role WHERE role_name = "Producer") as p,
+    (SELECT pid FROM Role WHERE role_name = "Producer") as pr,
     Award aw
-    WHERE p.id = a.pid AND p.id = d.pid AND p.id = p.pid AND p.id = aw.pid
+    WHERE p.id = a.pid AND p.id = d.pid AND p.id = pr.pid AND p.id = aw.pid
     """
 
     with Database() as db:
@@ -394,7 +394,6 @@ def high_roi_movies():
     #               Only include movies that have an ROI greater than the average ROI of all Marvel movies
     #               First column should be the movie name, second column should be country, and third column should be the ROI.
 
-    # This runs but returns nothing, so something's wrong
     query = """ 
     SELECT DISTINCT mp.name, l.country, (m.boxoffice_collection / mp.budget) AS roi
     FROM MotionPicture mp
