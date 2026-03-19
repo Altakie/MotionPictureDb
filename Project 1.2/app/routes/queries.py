@@ -381,16 +381,15 @@ def high_roi_movies():
 
     # This runs but returns nothing, so something's wrong
     query = """ 
-    SELECT mp.name, l.country, (m.boxoffice_collection / mp.budget) AS roi
+    SELECT DISTINCT mp.name, l.country, (m.boxoffice_collection / mp.budget) AS roi
     FROM MotionPicture mp
     JOIN Movie m ON mp.id = m.mpid
     JOIN Location l ON mp.id = l.mpid
     WHERE l.country = 'USA' AND (m.boxoffice_collection / mp.budget) > (
-        SELECT AVG(m2.boxoffice_collection / mp2.budget)
+        SELECT AVG(m2.boxoffice_collection / mp2.budget) AS avg_roi
         FROM MotionPicture mp2
         JOIN Movie m2 ON mp2.id = m2.mpid
-        JOIN Genre g2 ON m2.mpid = g2.mpid
-        WHERE g2.genre_name = 'Marvel'
+        WHERE mp2.production = 'Marvel'
     )
     ORDER BY roi DESC
     LIMIT 5;
