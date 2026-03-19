@@ -211,7 +211,8 @@ def top_thriller_movies_boston():
     JOIN Movie m ON mp.id = m.mpid
     JOIN Genre g ON m.mpid = g.mpid
     JOIN Location l ON m.mpid = l.mpid
-    WHERE g.genre_name = 'Thriller' AND l.city = 'Boston'
+    WHERE g.genre_name = 'Thriller' 
+    AND mp.id NOT IN (SELECT mpid FROM Location WHERE city != 'Boston')
     GROUP BY mp.id
     HAVING COUNT(DISTINCT l.city) = 1
     ORDER BY mp.rating DESC
@@ -255,7 +256,7 @@ def actors_marvel_warner():
     query = """ 
     SELECT mw.pname, everything.name
     FROM
-    (SELECT r.pid as pid, name FROM MotionPicture mp, Role r WHERE r.mpid = mp.id AND role_name = "Actor" AND (production = "Warner Bros" OR production = "Marvel")) as everything,
+    (SELECT r.pid as pid, name FROM MotionPicture mp, Role r WHERE r.mpid = mp.id AND role_name = 'Actor' AND (production = 'Warner Bros' OR production = 'Marvel')) as everything,
     (SELECT DISTINCT m.id, m.pname
         FROM
             (SELECT p.id, p.name as pname, mp.name AS mp_name
@@ -388,7 +389,7 @@ def versatile_talent():
     )
 
 
-@queries_bp.route("/high_roi_movies", methods=["GET"])
+@queries_bp.route("'high_roi_movies", methods=["GET"])
 def high_roi_movies():
     # >>>> TODO 17: Find the top 5 movies produced(shooted) in the USA with a “Return on Investment” (Box Office/Budget) higher than the average return on investment of all Marvel movies. <<<<
     #               Only include movies that have an ROI greater than the average ROI of all Marvel movies
