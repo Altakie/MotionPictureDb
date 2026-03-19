@@ -253,12 +253,21 @@ def actors_marvel_warner():
     #               List the actor names and the corresponding motion picture names.
 
     query = """ 
-    SELECT a.name, m.name, wb.name
-    FROM (SELECT name, mpid FROM People, Role WHERE id = pid AND role_name = "Actor") as a,
-    (SELECT name, id FROM MotionPicture WHERE production = "Marvel") as m,
-    (SELECT name, id FROM MotionPicture WHERE production = "Warner Bros") as wb
-    WHERE a.mpid IN (SELECT id FROM MotionPicture WHERE production = "Marvel") 
-    AND a.mpid IN (SELECT id FROM MotionPicture WHERE production = "Warner Bros");
+    
+    (SELECT DISTINCT mw.id, m.mp_name, w.mp_name
+    FROM
+        (SELECT p.id, p.name, mp.name AS mp_name
+        FROM People p
+        JOIN Role r ON p.id = r.pid
+        JOIN MotionPicture mp ON r.mpid = mp.id AND mp.production = 'Marvel'
+        WHERE r.role_name = 'Actor') AS m
+        JOIN
+        (SELECT p.id, p.name, mp.name AS mp_name
+        FROM People p
+        JOIN Role r ON p.id = r.pid
+        JOIN MotionPicture mp ON r.mpid = mp.id AND mp.production = 'Warner Bros'
+        WHERE r.role_name = 'Actor') AS w
+    ON m.id = w.id) AS mw;
     """
 
     with Database() as db:
