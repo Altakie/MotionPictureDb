@@ -9,7 +9,7 @@ def list_tables():
 
     # >>>> TODO 1: Write a query to list all the tables in the database. <<<<
 
-    query = """ """
+    query = """ show tables; """
 
     with Database() as db:
         tables = db.execute(query)
@@ -23,7 +23,11 @@ def search_movie():
     # >>>> TODO 2: Search Motion Picture by Motion picture name (parameterized). <<<<
     #              List the motion picture name along with its rating, production, and budget.
 
-    query = """ """
+    query = """
+    SELECT name, rating, production, budget
+    FROM MotionPicture
+    WHERE name LIKE %s;
+    """
 
     with Database() as db:
         movies = db.execute(query, (f"%{movie_name}%",))
@@ -37,7 +41,13 @@ def search_liked_movies():
     # >>>> TODO 3: Find the movies that have been liked by a specific user. A user is uniquely identified by their email (parameterized). <<<<
     #              List the movie `name`, `rating`, `production` and `budget`.
 
-    query = """ """
+    query = """
+    SELECT mp.name, mp.rating, mp.production, mp.budget
+    FROM MotionPicture mp
+    JOIN Movie m on mp.id = m.mpid
+    JOIN Likes l ON m.mpid = l.mpid
+    WHERE l.uemail = %s;
+     """
 
     with Database() as db:
         movies = db.execute(query, (user_email,))
@@ -51,7 +61,12 @@ def search_by_country():
     # >>>> TODO 4: Search motion pictures by their shooting location country. <<<<
     #              List only the motion picture names without any duplicates.
 
-    query = """ """
+    query = """ 
+    SELECT DISTINCT mp.name
+    FROM MotionPicture mp
+    JOIN Location l ON mp.id = l.mpid
+    WHERE l.country = %s;
+    """
 
     with Database() as db:
         movies = db.execute(query, (country,))
@@ -65,7 +80,15 @@ def search_directors_by_zip():
     # >>>> TODO 5: List all directors who have directed a TV series shot in a specific zip code (parameterized). <<<<
     #              List the director’s name and TV series name only, without duplicates.
 
-    query = """ """
+    query = """ 
+    SELECT DISTINCT p.name, mp.name
+    FROM People p
+    JOIN Role r ON p.id = r.pid
+    JOIN Series s ON r.mpid = s.mpid
+    JOIN MotionPicture mp ON s.mpid = mp.id
+    JOIN Location l ON s.mpid = l.mpid
+    WHERE r.role_name = 'Director' AND l.zip = %s;
+    """
 
     with Database() as db:
         results = db.execute(query, (zip_code,))
@@ -79,7 +102,14 @@ def search_awards():
     # >>>> TODO 6: Identify the individuals who have received more than “k” (parameterized) awards for a single motion picture in the same year. <<<<
     #              Return the individual’s name, the motion picture’s name, the award year, and the award count.
 
-    query = """ """
+    query = """
+    SELECT p.name, mp.name, a.award_year, COUNT(*) as award_count
+    FROM People p
+    JOIN Award a ON p.id = a.pid
+    JOIN MotionPicture mp ON a.mpid = mp.id
+    GROUP BY p.id, mp.id, a.award_year
+    HAVING COUNT(*) > %s;
+    """
 
     with Database() as db:
         results = db.execute(query, (k,))
