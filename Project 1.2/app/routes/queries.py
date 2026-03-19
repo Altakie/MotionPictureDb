@@ -358,13 +358,13 @@ def versatile_talent():
     #               List the person’s `name` and `nationality`.
 
     query = """ 
-    SELECT 
-    FROM 
-    (SELECT pid FROM Role WHERE role_name = "Actor") a,
-    (SELECT pid FROM Role WHERE role_name = "Director") d,
-    (SELECT pid FROM Role WHERE role_name = "Producer") p,
+    SELECT DISTINCT p.name, p.nationality
+    FROM People p,
+    (SELECT pid FROM Role WHERE role_name = "Actor") as a,
+    (SELECT pid FROM Role WHERE role_name = "Director") as d,
+    (SELECT pid FROM Role WHERE role_name = "Producer") as p,
     Award aw
-    WHERE 
+    WHERE p.id = a.pid AND p.id = d.pid AND p.id = p.pid AND p.id = aw.pid
     """
 
     with Database() as db:
